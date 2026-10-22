@@ -2,7 +2,7 @@ namespace CleanMinimalApi.Presentation.Tests.Unit.Endpoints;
 
 using System.Threading.Tasks;
 using CleanMinimalApi.Application.Common.Exceptions;
-using CleanMinimalApi.Application.Reviews.Entities;
+using Application.Loan.Entities;
 using CleanMinimalApi.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,27 +23,27 @@ public class MovieEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetMovies.GetMoviesQuery>())
+            .Send(Arg.Any<Queries.GetMovies.GetBooksQuery>())
             .ReturnsForAnyArgs(
             [
-                new Entities.Movie(Guid.Empty, "Lorem Ipsum")
+                new Entities.Book(Guid.Empty, "Lorem Ipsum")
             ]);
 
         // Act
         var response = await MovieEndpoints.GetMovies(sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Movie>>>();
+        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Book>>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<List<Entities.Movie>>();
+        var value = result.Value.ShouldBeOfType<List<Entities.Book>>();
 
         _ = value[0].Id.ShouldBeOfType<Guid>();
         value[0].Id.ShouldBe(Guid.Empty);
         _ = value[0].Title.ShouldBeOfType<string>();
         value[0].Title.ShouldBe("Lorem Ipsum");
-        _ = value[0].Reviews.ShouldBeAssignableTo<ICollection<Review>>();
+        _ = value[0].Reviews.ShouldBeAssignableTo<ICollection<Loan>>();
         value[0].Reviews.ShouldBeNull();
     }
 
@@ -54,7 +54,7 @@ public class MovieEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetMovies.GetMoviesQuery>())
+            .Send(Arg.Any<Queries.GetMovies.GetBooksQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act
@@ -78,24 +78,24 @@ public class MovieEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetMovieById.GetMovieByIdQuery>())
-            .ReturnsForAnyArgs(new Entities.Movie(Guid.Empty, "Lorem Ipsum"));
+            .Send(Arg.Any<Queries.GetMovieById.GetBookByIdQuery>())
+            .ReturnsForAnyArgs(new Entities.Book(Guid.Empty, "Lorem Ipsum"));
 
         // Act
         var response = await MovieEndpoints.GetMovieById(Guid.Empty, sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<Entities.Movie>>();
+        var result = response.Result.ShouldBeOfType<Ok<Entities.Book>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<Entities.Movie>();
+        var value = result.Value.ShouldBeOfType<Entities.Book>();
 
         _ = value.Id.ShouldBeOfType<Guid>();
         value.Id.ShouldBe(Guid.Empty);
         _ = value.Title.ShouldBeOfType<string>();
         value.Title.ShouldBe("Lorem Ipsum");
-        _ = value.Reviews.ShouldBeAssignableTo<ICollection<Review>>();
+        _ = value.Reviews.ShouldBeAssignableTo<ICollection<Loan>>();
         value.Reviews.ShouldBeNull();
     }
 
@@ -106,7 +106,7 @@ public class MovieEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetMovieById.GetMovieByIdQuery>())
+            .Send(Arg.Any<Queries.GetMovieById.GetBookByIdQuery>())
             .Throws(new NotFoundException("Expected Exception"));
 
         // Act
@@ -126,7 +126,7 @@ public class MovieEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetMovieById.GetMovieByIdQuery>())
+            .Send(Arg.Any<Queries.GetMovieById.GetBookByIdQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act

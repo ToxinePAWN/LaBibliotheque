@@ -41,7 +41,7 @@ public static class WebApplicationExtensions
         _ = app.MapVersionEndpoints();
         _ = app.MapAuthorEndpoints();
         _ = app.MapMovieEndpoints();
-        _ = app.MapReviewEndpoints();
+        _ = app.MapLoanEndpoints();
 
         #endregion MinimalApi
 

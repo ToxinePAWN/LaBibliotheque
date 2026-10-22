@@ -22,7 +22,7 @@ public class MovieReviewsDataFixture : IDisposable
     internal MovieReviewsDbContext Context { get; set; }
     internal FakeTimeProvider TimeProvider { get; set; }
     internal IMapper Mapper { get; set; }
-    internal EntityFrameworkMovieReviewsRepository Repository { get; set; }
+    internal EntityFrameworkBookLoansRepository Repository { get; set; }
 
     public MovieReviewsDataFixture()
     {
@@ -45,7 +45,7 @@ public class MovieReviewsDataFixture : IDisposable
                 ]))
                 .CreateMapper();
 
-        this.Repository = new EntityFrameworkMovieReviewsRepository(this.Context, this.TimeProvider, this.Mapper);
+        this.Repository = new EntityFrameworkBookLoansRepository(this.Context, this.TimeProvider, this.Mapper);
 
         _ = this.Context.Database.EnsureDeleted();
         _ = this.Context.Database.EnsureCreated();

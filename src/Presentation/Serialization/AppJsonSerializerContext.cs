@@ -3,7 +3,7 @@ namespace CleanMinimalApi.Presentation.Serialization;
 using System.Text.Json.Serialization;
 using Application.Authors.Entities;
 using Application.Movies.Entities;
-using Application.Reviews.Entities;
+using Application.Loans.Entities;
 using Application.Versions.Entities;
 using Requests;
 
@@ -17,14 +17,12 @@ using Requests;
     PropertyNameCaseInsensitive = true,
     WriteIndented = false,
     GenerationMode = JsonSourceGenerationMode.Default)]
-[JsonSerializable(typeof(Author))]
-[JsonSerializable(typeof(List<Author>))]
-[JsonSerializable(typeof(Movie))]
-[JsonSerializable(typeof(List<Movie>))]
-[JsonSerializable(typeof(Review))]
-[JsonSerializable(typeof(List<Review>))]
-[JsonSerializable(typeof(ReviewAuthor))]
-[JsonSerializable(typeof(ReviewedMovie))]
+[JsonSerializable(typeof(Member))]
+[JsonSerializable(typeof(List<Member>))]
+[JsonSerializable(typeof(Book))]
+[JsonSerializable(typeof(List<Book>))]
+[JsonSerializable(typeof(Loan))]
+[JsonSerializable(typeof(List<Loan>))]
 [JsonSerializable(typeof(Version))]
 [JsonSerializable(typeof(List<Version>))]
 [JsonSerializable(typeof(CreateReviewRequest))]

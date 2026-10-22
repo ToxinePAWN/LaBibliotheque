@@ -3,7 +3,7 @@ namespace CleanMinimalApi.Infrastructure;
 using System;
 using Application.Authors;
 using Application.Movies;
-using Application.Reviews;
+using Application.Loans;
 using Databases.MovieReviews;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,14 +17,14 @@ public static class DependencyInjection
 
         _ = services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        _ = services.AddSingleton<EntityFrameworkMovieReviewsRepository>();
+        _ = services.AddSingleton<EntityFrameworkBookLoansRepository>();
 
-        _ = services.AddSingleton<IAuthorsRepository>(p =>
-            p.GetRequiredService<EntityFrameworkMovieReviewsRepository>());
-        _ = services.AddSingleton<IMoviesRepository>(x =>
-            x.GetRequiredService<EntityFrameworkMovieReviewsRepository>());
-        _ = services.AddSingleton<IReviewsRepository>(x =>
-            x.GetRequiredService<EntityFrameworkMovieReviewsRepository>());
+        _ = services.AddSingleton<IMembersRepository>(p =>
+            p.GetRequiredService<EntityFrameworkBookLoansRepository>());
+        _ = services.AddSingleton<IBooksRepository>(x =>
+            x.GetRequiredService<EntityFrameworkBookLoansRepository>());
+        _ = services.AddSingleton<ILoansRepository>(x =>
+            x.GetRequiredService<EntityFrameworkBookLoansRepository>());
 
         _ = services.AddSingleton(TimeProvider.System);
 

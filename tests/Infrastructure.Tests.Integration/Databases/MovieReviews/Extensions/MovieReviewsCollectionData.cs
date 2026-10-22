@@ -24,7 +24,7 @@ internal static class MovieReviewsDbContextExtensions
             new() { Id = Guid.NewGuid(), Title = "Three" }
         ];
 
-        context.Movies.AddRange(movies);
+        context.Books.AddRange(movies);
 
         List<Review> reviews =
         [
@@ -39,7 +39,7 @@ internal static class MovieReviewsDbContextExtensions
             new() { Id = Guid.NewGuid(), ReviewAuthorId = authors[2].Id, ReviewedMovieId = movies[2].Id, Stars = 1 }
         ];
 
-        context.Reviews.AddRange(reviews);
+        context.Loans.AddRange(reviews);
 
         _ = context.SaveChanges();
 

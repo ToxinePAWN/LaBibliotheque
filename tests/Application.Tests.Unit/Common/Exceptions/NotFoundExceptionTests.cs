@@ -12,8 +12,8 @@ public class NotFoundExceptionTests
     public void ThrowIfNull_ShouldNotThrow_NotFoundException()
     {
         // Arrange
-        var entityType = EntityType.Author;
-        var argument = new Author(Guid.NewGuid(), "FirstName", "LastName");
+        var entityType = EntityType.Member;
+        var argument = new Member(Guid.NewGuid(), "FirstName", "LastName");
 
         // Act
         var result = Should.NotThrow(() =>
@@ -31,8 +31,8 @@ public class NotFoundExceptionTests
     public void ThrowIfNull_ShouldThrow_NotFoundException()
     {
         // Arrange
-        var entityType = EntityType.Author;
-        Author argument = null;
+        var entityType = EntityType.Member;
+        Member argument = null;
 
         // Act
         var result = Should.Throw<NotFoundException>(() =>
@@ -52,7 +52,7 @@ public class NotFoundExceptionTests
     public void Throw_ShouldThrow_NotFoundException()
     {
         // Arrange
-        var entityType = EntityType.Author;
+        var entityType = EntityType.Member;
 
         // Act
         var result = Should.Throw<NotFoundException>(() =>

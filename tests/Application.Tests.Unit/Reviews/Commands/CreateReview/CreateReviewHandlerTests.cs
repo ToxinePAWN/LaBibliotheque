@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Application.Authors;
 using Application.Common.Exceptions;
 using Application.Movies;
-using Application.Reviews;
-using Application.Reviews.Commands.CreateReview;
+using Loan;
+using Loan.Commands.CreateReview;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -20,27 +20,27 @@ public class CreateHandlerTests
         var command = new CreateReviewCommand
         {
             AuthorId = Guid.Empty,
-            MovieId = Guid.Empty,
+            BookId = Guid.Empty,
             Stars = 5
         };
 
-        var authorsRepository = Substitute.For<IAuthorsRepository>();
-        var moviesRepository = Substitute.For<IMoviesRepository>();
-        var reviewsRepository = Substitute.For<IReviewsRepository>();
+        var authorsRepository = Substitute.For<IMembersRepository>();
+        var moviesRepository = Substitute.For<IBooksRepository>();
+        var reviewsRepository = Substitute.For<ILoansRepository>();
 
-        _ = authorsRepository.AuthorExists(default, default).ReturnsForAnyArgs(true);
-        _ = moviesRepository.MovieExists(default, default).ReturnsForAnyArgs(true);
+        _ = authorsRepository.MemberExists(default, default).ReturnsForAnyArgs(true);
+        _ = moviesRepository.BookExists(default, default).ReturnsForAnyArgs(true);
 
-        var handler = new CreateReviewHandler(authorsRepository, moviesRepository, reviewsRepository);
+        var handler = new CreateLoanHandler(authorsRepository, moviesRepository, reviewsRepository);
         var token = new CancellationTokenSource().Token;
 
         // Act
         _ = await handler.Handle(command, token);
 
         // Assert
-        _ = await authorsRepository.Received(1).AuthorExists(command.AuthorId, token);
-        _ = await moviesRepository.Received(1).MovieExists(command.MovieId, token);
-        _ = await reviewsRepository.Received(1).CreateReview(command.AuthorId, command.MovieId, command.Stars, token);
+        _ = await authorsRepository.Received(1).MemberExists(command.AuthorId, token);
+        _ = await moviesRepository.Received(1).BookExists(command.BookId, token);
+        _ = await reviewsRepository.Received(1).CreateLoan(command.AuthorId, command.BookId, command.Stars, token);
     }
 
     [Fact]
@@ -50,18 +50,18 @@ public class CreateHandlerTests
         var command = new CreateReviewCommand
         {
             AuthorId = Guid.Empty,
-            MovieId = Guid.Empty,
+            BookId = Guid.Empty,
             Stars = 5
         };
 
-        var authorsRepository = Substitute.For<IAuthorsRepository>();
-        var moviesRepository = Substitute.For<IMoviesRepository>();
-        var reviewsRepository = Substitute.For<IReviewsRepository>();
+        var authorsRepository = Substitute.For<IMembersRepository>();
+        var moviesRepository = Substitute.For<IBooksRepository>();
+        var reviewsRepository = Substitute.For<ILoansRepository>();
 
-        _ = authorsRepository.AuthorExists(default, default).ReturnsForAnyArgs(false);
-        _ = moviesRepository.MovieExists(default, default).ReturnsForAnyArgs(true);
+        _ = authorsRepository.MemberExists(default, default).ReturnsForAnyArgs(false);
+        _ = moviesRepository.BookExists(default, default).ReturnsForAnyArgs(true);
 
-        var handler = new CreateReviewHandler(authorsRepository, moviesRepository, reviewsRepository);
+        var handler = new CreateLoanHandler(authorsRepository, moviesRepository, reviewsRepository);
         var token = new CancellationTokenSource().Token;
 
         // Act
@@ -70,9 +70,9 @@ public class CreateHandlerTests
         // Assert
         exception.Message.ShouldBe("The Author with the supplied id was not found.");
 
-        _ = await authorsRepository.Received(1).AuthorExists(command.AuthorId, token);
-        _ = await moviesRepository.DidNotReceive().MovieExists(command.MovieId, token);
-        _ = await reviewsRepository.DidNotReceive().CreateReview(command.AuthorId, command.MovieId, command.Stars, token);
+        _ = await authorsRepository.Received(1).MemberExists(command.AuthorId, token);
+        _ = await moviesRepository.DidNotReceive().BookExists(command.BookId, token);
+        _ = await reviewsRepository.DidNotReceive().CreateLoan(command.AuthorId, command.BookId, command.Stars, token);
     }
 
     [Fact]
@@ -82,17 +82,17 @@ public class CreateHandlerTests
         var command = new CreateReviewCommand
         {
             AuthorId = Guid.Empty,
-            MovieId = Guid.Empty,
+            BookId = Guid.Empty,
             Stars = 5
         };
-        var authorsRepository = Substitute.For<IAuthorsRepository>();
-        var moviesRepository = Substitute.For<IMoviesRepository>();
-        var reviewsRepository = Substitute.For<IReviewsRepository>();
+        var authorsRepository = Substitute.For<IMembersRepository>();
+        var moviesRepository = Substitute.For<IBooksRepository>();
+        var reviewsRepository = Substitute.For<ILoansRepository>();
 
-        _ = authorsRepository.AuthorExists(default, default).ReturnsForAnyArgs(true);
-        _ = moviesRepository.MovieExists(default, default).ReturnsForAnyArgs(false);
+        _ = authorsRepository.MemberExists(default, default).ReturnsForAnyArgs(true);
+        _ = moviesRepository.BookExists(default, default).ReturnsForAnyArgs(false);
 
-        var handler = new CreateReviewHandler(authorsRepository, moviesRepository, reviewsRepository);
+        var handler = new CreateLoanHandler(authorsRepository, moviesRepository, reviewsRepository);
         var token = new CancellationTokenSource().Token;
 
         // Act
@@ -101,8 +101,8 @@ public class CreateHandlerTests
         // Assert
         exception.Message.ShouldBe("The Movie with the supplied id was not found.");
 
-        _ = await authorsRepository.Received(1).AuthorExists(command.AuthorId, token);
-        _ = await moviesRepository.Received(1).MovieExists(command.MovieId, token);
-        _ = await reviewsRepository.DidNotReceive().CreateReview(command.AuthorId, command.MovieId, command.Stars, token);
+        _ = await authorsRepository.Received(1).MemberExists(command.AuthorId, token);
+        _ = await moviesRepository.Received(1).BookExists(command.BookId, token);
+        _ = await reviewsRepository.DidNotReceive().CreateLoan(command.AuthorId, command.BookId, command.Stars, token);
     }
 }

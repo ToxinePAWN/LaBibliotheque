@@ -20,13 +20,13 @@ public static class AuthorEndpoints
             .WithDescription("Lookup and Find Authors");
 
         _ = root.MapGet("/", GetAuthors)
-            .Produces<List<Entities.Author>>()
+            .Produces<List<Entities.Member>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Lookup all Authors")
             .WithDescription("\n    GET /author");
 
         _ = root.MapGet("/{id}", GetAuthorById)
-            .Produces<Entities.Author>()
+            .Produces<Entities.Member>()
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
@@ -36,11 +36,11 @@ public static class AuthorEndpoints
         return app;
     }
 
-    public static async Task<Results<Ok<List<Entities.Author>>, ProblemHttpResult>> GetAuthors([FromServices] ISender sender)
+    public static async Task<Results<Ok<List<Entities.Member>>, ProblemHttpResult>> GetAuthors([FromServices] ISender sender)
     {
         try
         {
-            return TypedResults.Ok(await sender.Send(new Queries.GetAuthors.GetAuthorsQuery()));
+            return TypedResults.Ok(await sender.Send(new Queries.GetAuthors.GetMemberQuery()));
         }
         catch (Exception ex)
         {
@@ -48,11 +48,11 @@ public static class AuthorEndpoints
         }
     }
 
-    public static async Task<Results<Ok<Entities.Author>, NotFound<string>, ProblemHttpResult>> GetAuthorById([Validate][FromRoute] Guid id, [FromServices] ISender sender)
+    public static async Task<Results<Ok<Entities.Member>, NotFound<string>, ProblemHttpResult>> GetAuthorById([Validate][FromRoute] Guid id, [FromServices] ISender sender)
     {
         try
         {
-            return TypedResults.Ok(await sender.Send(new Queries.GetAuthorById.GetAuthorByIdQuery
+            return TypedResults.Ok(await sender.Send(new Queries.GetAuthorById.GetMemberByIdQuery
             {
                 Id = id
             }));

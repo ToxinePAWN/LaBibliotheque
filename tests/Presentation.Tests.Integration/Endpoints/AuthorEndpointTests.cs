@@ -27,7 +27,7 @@ public class AuthorEndpointTests : IDisposable
         // Act
         using var response = await client.GetAsync("/api/author");
         var result = (await response.Content.ReadAsStringAsync())
-            .Deserialize<List<Entities.Author>>();
+            .Deserialize<List<Entities.Member>>();
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -46,7 +46,7 @@ public class AuthorEndpointTests : IDisposable
             _ = author.LastName.ShouldBeOfType<string>();
             author.LastName.ShouldNotBeNullOrWhiteSpace();
 
-            foreach (var review in author.Reviews)
+            foreach (var review in author.Loans)
             {
                 _ = review.Stars.ShouldBeOfType<int>();
                 review.Stars.ShouldBeInRange(1, 5);
@@ -65,11 +65,11 @@ public class AuthorEndpointTests : IDisposable
         using var client = this.application.CreateClient();
         using var authorResponse = await client.GetAsync("/api/author");
         var authorResult = (await authorResponse.Content.ReadAsStringAsync())
-            .Deserialize<List<Entities.Author>>()[0];
+            .Deserialize<List<Entities.Member>>()[0];
 
         // Act
         using var response = await client.GetAsync($"/api/author/{authorResult.Id}");
-        var result = (await response.Content.ReadAsStringAsync()).Deserialize<Entities.Author>();
+        var result = (await response.Content.ReadAsStringAsync()).Deserialize<Entities.Member>();
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -81,9 +81,9 @@ public class AuthorEndpointTests : IDisposable
         result.FirstName.ShouldNotBeNullOrWhiteSpace();
         _ = result.LastName.ShouldBeOfType<string>();
         result.FirstName.ShouldNotBeNullOrWhiteSpace();
-        result.Reviews.ShouldNotBeEmpty();
+        result.Loans.ShouldNotBeEmpty();
 
-        foreach (var review in result.Reviews)
+        foreach (var review in result.Loans)
         {
             _ = review.Stars.ShouldBeOfType<int>();
             review.Stars.ShouldBeInRange(1, 5);

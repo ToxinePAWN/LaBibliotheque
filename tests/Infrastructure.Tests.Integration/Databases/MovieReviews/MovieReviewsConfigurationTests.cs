@@ -19,10 +19,10 @@ public class MovieReviewsConfigurationTests(MovieReviewsDataFixture fixture)
         var author = await context.Authors
             .Include(a => a.Reviews)
             .FirstOrDefaultAsync(a => a.FirstName == "One", token);
-        var movie = await context.Movies
+        var movie = await context.Books
             .Include(m => m.Reviews)
             .FirstOrDefaultAsync(m => m.Title == "One", token);
-        var review = await context.Reviews
+        var review = await context.Loans
             .Include(r => r.ReviewAuthor)
             .Include(r => r.ReviewedMovie)
             .FirstOrDefaultAsync(m => m.Stars == 5, token);

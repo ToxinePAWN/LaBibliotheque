@@ -8,7 +8,7 @@ internal static class MovieReviewsDbContextExtensions
 {
     public static MovieReviewsDbContext AddData(this MovieReviewsDbContext context)
     {
-        var authors = new Faker<Author>()
+        var authors = new Faker<MemberModel>()
             .RuleFor(a => a.Id, _ => Guid.NewGuid())
             .RuleFor(a => a.FirstName, f => f.Person.FirstName)
             .RuleFor(a => a.LastName, f => f.Person.LastName)
@@ -18,23 +18,25 @@ internal static class MovieReviewsDbContextExtensions
 
         context.AddRange(authors);
 
-        var movies = new Faker<Movie>()
+        var movies = new Faker<BookModel>()
             .RuleFor(m => m.Id, _ => Guid.NewGuid())
             .RuleFor(m => m.Title, f => f.Company.CatchPhrase())
+            .RuleFor(m => m.Author, f => f.Person.FullName)
+            .RuleFor(m => m.Copies, f => f.Random.Number(1, 3))
             .RuleFor(m => m.DateCreated, f => f.Date.Past())
             .RuleFor(m => m.DateModified, f => f.Date.Past())
             .Generate(50);
 
         context.AddRange(movies);
 
-        var reviews = new Faker<Review>()
+        var reviews = new Faker<LoanModel>()
             .RuleFor(r => r.Id, _ => Guid.NewGuid())
-            .RuleFor(r => r.ReviewedMovieId, f => f.PickRandom(movies).Id)
-            .RuleFor(r => r.ReviewAuthorId, f => f.PickRandom(authors).Id)
-            .RuleFor(r => r.Stars, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.BookId, f => f.PickRandom(movies).Id)
+            .RuleFor(r => r.MemberId, f => f.PickRandom(authors).Id)
+            .RuleFor(r => r.StartDate, f => f.Date.Recent(40))
             .RuleFor(r => r.DateCreated, f => f.Date.Past())
             .RuleFor(r => r.DateModified, f => f.Date.Past())
-            .Generate(150);
+            .Generate(30);
 
         context.AddRange(reviews);
 

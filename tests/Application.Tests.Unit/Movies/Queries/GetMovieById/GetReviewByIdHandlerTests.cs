@@ -16,25 +16,25 @@ public class ReadByIdHandlerTests
     public async Task Handle_ShouldPassThrough_Query()
     {
         // Arrange
-        var query = new GetMovieByIdQuery
+        var query = new GetBookByIdQuery
         {
             Id = Guid.Empty
         };
 
-        var context = Substitute.For<IMoviesRepository>();
-        var handler = new GetMovieByIdHandler(context);
+        var context = Substitute.For<IBooksRepository>();
+        var handler = new GetBookByIdHandler(context);
         var token = new CancellationTokenSource().Token;
 
-        _ = context.GetMovieById(Arg.Any<Guid>(), token).Returns(new Movie(Guid.Empty, "Title"));
+        _ = context.GetBookById(Arg.Any<Guid>(), token).Returns(new Book(Guid.Empty, "Title"));
 
         // Act
         var result = await handler.Handle(query, token);
 
         // Assert
-        _ = await context.Received(1).GetMovieById(query.Id, token);
+        _ = await context.Received(1).GetBookById(query.Id, token);
 
         _ = result.ShouldNotBeNull();
-        _ = result.ShouldBeOfType<Movie>();
+        _ = result.ShouldBeOfType<Book>();
 
         result.Id.ShouldBe(Guid.Empty);
         result.Title.ShouldBe("Title");
@@ -45,20 +45,20 @@ public class ReadByIdHandlerTests
     public async Task Handle_ShouldThrowException_DoesNotExist()
     {
         // Arrange
-        var query = new GetMovieByIdQuery
+        var query = new GetBookByIdQuery
         {
             Id = Guid.Empty
         };
 
-        var context = Substitute.For<IMoviesRepository>();
-        var handler = new GetMovieByIdHandler(context);
+        var context = Substitute.For<IBooksRepository>();
+        var handler = new GetBookByIdHandler(context);
         var token = new CancellationTokenSource().Token;
 
         // Act
         var exception = Should.Throw<NotFoundException>(async () => await handler.Handle(query, token));
 
         // Assert
-        _ = await context.Received(1).GetMovieById(query.Id, token);
+        _ = await context.Received(1).GetBookById(query.Id, token);
 
         exception.Message.ShouldBe("The Movie with the supplied id was not found.");
     }

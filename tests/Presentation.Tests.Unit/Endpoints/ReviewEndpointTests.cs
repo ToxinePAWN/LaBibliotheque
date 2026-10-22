@@ -12,9 +12,9 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Shouldly;
 using Xunit;
-using Commands = Application.Reviews.Commands;
-using Entities = Application.Reviews.Entities;
-using Queries = Application.Reviews.Queries;
+using Commands = Application.Loan.Commands;
+using Entities = Application.Loan.Entities;
+using Queries = Application.Loan.Queries;
 
 public class ReviewEndpointTests
 {
@@ -25,10 +25,10 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetReviews.GetReviewsQuery>())
+            .Send(Arg.Any<Queries.GetReviews.GetLoansQuery>())
             .ReturnsForAnyArgs(
             [
-                new Entities.Review(
+                new Entities.Loan(
                     Guid.Empty,
                     5,
                     new ReviewedMovie(Guid.Empty, "Lorem Ipsum"),
@@ -40,11 +40,11 @@ public class ReviewEndpointTests
         var response = await ReviewEndpoints.GetReviews(sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Review>>>();
+        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Loan>>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<List<Entities.Review>>();
+        var value = result.Value.ShouldBeOfType<List<Entities.Loan>>();
 
         _ = value[0].Id.ShouldBeOfType<Guid>();
         value[0].Id.ShouldBe(Guid.Empty);
@@ -71,7 +71,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetReviews.GetReviewsQuery>())
+            .Send(Arg.Any<Queries.GetReviews.GetLoansQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act
@@ -95,8 +95,8 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetReviewById.GetReviewByIdQuery>())
-            .ReturnsForAnyArgs(new Entities.Review(
+            .Send(Arg.Any<Queries.GetReviewById.GetLoanByIdQuery>())
+            .ReturnsForAnyArgs(new Entities.Loan(
                 Guid.Empty,
                 5,
                 new ReviewedMovie(Guid.Empty, "Lorem Ipsum"),
@@ -107,11 +107,11 @@ public class ReviewEndpointTests
         var response = await ReviewEndpoints.GetReviewById(Guid.Empty, sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<Entities.Review>>();
+        var result = response.Result.ShouldBeOfType<Ok<Entities.Loan>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<Entities.Review>();
+        var value = result.Value.ShouldBeOfType<Entities.Loan>();
 
         _ = value.Id.ShouldBeOfType<Guid>();
         value.Id.ShouldBe(Guid.Empty);
@@ -138,7 +138,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetReviewById.GetReviewByIdQuery>())
+            .Send(Arg.Any<Queries.GetReviewById.GetLoanByIdQuery>())
             .Throws(new NotFoundException("Expected Exception"));
 
         // Act
@@ -158,7 +158,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetReviewById.GetReviewByIdQuery>())
+            .Send(Arg.Any<Queries.GetReviewById.GetLoanByIdQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act
@@ -190,7 +190,7 @@ public class ReviewEndpointTests
 
         _ = sender
             .Send(Arg.Any<Commands.CreateReview.CreateReviewCommand>())
-            .ReturnsForAnyArgs(new Entities.Review(
+            .ReturnsForAnyArgs(new Entities.Loan(
                 Guid.Empty,
                 5,
                 new ReviewedMovie(Guid.Empty, "Lorem Ipsum"),
@@ -201,11 +201,11 @@ public class ReviewEndpointTests
         var response = await ReviewEndpoints.CreateReview(request, sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Created<Entities.Review>>();
+        var result = response.Result.ShouldBeOfType<Created<Entities.Loan>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status201Created);
 
-        var value = result.Value.ShouldBeOfType<Entities.Review>();
+        var value = result.Value.ShouldBeOfType<Entities.Loan>();
 
         _ = value.Id.ShouldBeOfType<Guid>();
         value.Id.ShouldBe(Guid.Empty);
@@ -296,7 +296,7 @@ public class ReviewEndpointTests
         };
 
         _ = sender
-            .Send(Arg.Any<Commands.UpdateReview.UpdateReviewCommand>())
+            .Send(Arg.Any<Commands.UpdateReview.UpdateLoanCommand>())
             .ReturnsForAnyArgs(true);
 
         // Act
@@ -321,7 +321,7 @@ public class ReviewEndpointTests
         };
 
         _ = sender
-            .Send(Arg.Any<Commands.UpdateReview.UpdateReviewCommand>())
+            .Send(Arg.Any<Commands.UpdateReview.UpdateLoanCommand>())
             .Throws(new NotFoundException("Expected Exception"));
 
         // Act
@@ -347,7 +347,7 @@ public class ReviewEndpointTests
         };
 
         _ = sender
-            .Send(Arg.Any<Commands.UpdateReview.UpdateReviewCommand>())
+            .Send(Arg.Any<Commands.UpdateReview.UpdateLoanCommand>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act
@@ -371,7 +371,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Commands.DeleteReview.DeleteReviewCommand>())
+            .Send(Arg.Any<Commands.DeleteReview.DeleteLoanCommand>())
             .ReturnsForAnyArgs(true);
 
         // Act
@@ -390,7 +390,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Commands.DeleteReview.DeleteReviewCommand>())
+            .Send(Arg.Any<Commands.DeleteReview.DeleteLoanCommand>())
             .Throws(new NotFoundException("Expected Exception"));
 
         // Act
@@ -410,7 +410,7 @@ public class ReviewEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Commands.DeleteReview.DeleteReviewCommand>())
+            .Send(Arg.Any<Commands.DeleteReview.DeleteLoanCommand>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act

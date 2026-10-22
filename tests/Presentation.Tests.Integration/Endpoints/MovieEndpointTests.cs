@@ -27,7 +27,7 @@ public class MovieEndpointTests : IDisposable
         // Act
         using var response = await client.GetAsync("/api/movie");
         var result = (await response.Content.ReadAsStringAsync())
-            .Deserialize<List<Entities.Movie>>();
+            .Deserialize<List<Entities.Book>>();
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -66,11 +66,11 @@ public class MovieEndpointTests : IDisposable
         using var client = this.application.CreateClient();
         using var movieResponse = await client.GetAsync("/api/movie");
         var movieResult = (await movieResponse.Content.ReadAsStringAsync())
-            .Deserialize<List<Entities.Movie>>()[0];
+            .Deserialize<List<Entities.Book>>()[0];
 
         // Act
         using var response = await client.GetAsync($"/api/movie/{movieResult.Id}");
-        var result = (await response.Content.ReadAsStringAsync()).Deserialize<Entities.Movie>();
+        var result = (await response.Content.ReadAsStringAsync()).Deserialize<Entities.Book>();
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);

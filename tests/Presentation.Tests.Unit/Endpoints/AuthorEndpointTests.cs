@@ -2,7 +2,7 @@ namespace CleanMinimalApi.Presentation.Tests.Unit.Endpoints;
 
 using System.Threading.Tasks;
 using CleanMinimalApi.Application.Common.Exceptions;
-using CleanMinimalApi.Application.Reviews.Entities;
+using Application.Loan.Entities;
 using CleanMinimalApi.Presentation.Endpoints;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,21 +23,21 @@ public class AuthorEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetAuthors.GetAuthorsQuery>())
+            .Send(Arg.Any<Queries.GetAuthors.GetMemberQuery>())
             .ReturnsForAnyArgs(
             [
-                new Entities.Author(Guid.Empty, "Lorem", "Ipsum")
+                new Entities.Member(Guid.Empty, "Lorem", "Ipsum")
             ]);
 
         // Act
         var response = await AuthorEndpoints.GetAuthors(sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Author>>>();
+        var result = response.Result.ShouldBeOfType<Ok<List<Entities.Member>>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<List<Entities.Author>>();
+        var value = result.Value.ShouldBeOfType<List<Entities.Member>>();
 
         _ = value[0].Id.ShouldBeOfType<Guid>();
         value[0].Id.ShouldBe(Guid.Empty);
@@ -45,8 +45,8 @@ public class AuthorEndpointTests
         value[0].FirstName.ShouldBe("Lorem");
         _ = value[0].LastName.ShouldBeOfType<string>();
         value[0].LastName.ShouldBe("Ipsum");
-        _ = value[0].Reviews.ShouldBeAssignableTo<ICollection<Review>>();
-        value[0].Reviews.ShouldBeNull();
+        _ = value[0].Loans.ShouldBeAssignableTo<ICollection<Loan>>();
+        value[0].Loans.ShouldBeNull();
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class AuthorEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetAuthors.GetAuthorsQuery>())
+            .Send(Arg.Any<Queries.GetAuthors.GetMemberQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act
@@ -80,18 +80,18 @@ public class AuthorEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetAuthorById.GetAuthorByIdQuery>())
-            .ReturnsForAnyArgs(new Entities.Author(Guid.Empty, "Lorem", "Ipsum"));
+            .Send(Arg.Any<Queries.GetAuthorById.GetMemberByIdQuery>())
+            .ReturnsForAnyArgs(new Entities.Member(Guid.Empty, "Lorem", "Ipsum"));
 
         // Act
         var response = await AuthorEndpoints.GetAuthorById(Guid.Empty, sender);
 
         // Assert
-        var result = response.Result.ShouldBeOfType<Ok<Entities.Author>>();
+        var result = response.Result.ShouldBeOfType<Ok<Entities.Member>>();
 
         result.StatusCode.ShouldBe(StatusCodes.Status200OK);
 
-        var value = result.Value.ShouldBeOfType<Entities.Author>();
+        var value = result.Value.ShouldBeOfType<Entities.Member>();
 
         _ = value.Id.ShouldBeOfType<Guid>();
         value.Id.ShouldBe(Guid.Empty);
@@ -99,8 +99,8 @@ public class AuthorEndpointTests
         value.FirstName.ShouldBe("Lorem");
         _ = value.LastName.ShouldBeOfType<string>();
         value.LastName.ShouldBe("Ipsum");
-        _ = value.Reviews.ShouldBeAssignableTo<ICollection<Review>>();
-        value.Reviews.ShouldBeNull();
+        _ = value.Loans.ShouldBeAssignableTo<ICollection<Loan>>();
+        value.Loans.ShouldBeNull();
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class AuthorEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetAuthorById.GetAuthorByIdQuery>())
+            .Send(Arg.Any<Queries.GetAuthorById.GetMemberByIdQuery>())
             .Throws(new NotFoundException("Expected Exception"));
 
         // Act
@@ -130,7 +130,7 @@ public class AuthorEndpointTests
         var sender = Substitute.For<ISender>();
 
         _ = sender
-            .Send(Arg.Any<Queries.GetAuthorById.GetAuthorByIdQuery>())
+            .Send(Arg.Any<Queries.GetAuthorById.GetMemberByIdQuery>())
             .Throws(new ArgumentException("Expected Exception"));
 
         // Act

@@ -20,13 +20,13 @@ public static class MovieEndpoints
             .WithDescription("Lookup and Find Movies");
 
         _ = root.MapGet("/", GetMovies)
-            .Produces<List<Entities.Movie>>()
+            .Produces<List<Entities.Book>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Lookup all Movies")
             .WithDescription("\n    GET /movie");
 
         _ = root.MapGet("/{id}", GetMovieById)
-            .Produces<Entities.Movie>()
+            .Produces<Entities.Book>()
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
@@ -36,11 +36,11 @@ public static class MovieEndpoints
         return app;
     }
 
-    public static async Task<Results<Ok<List<Entities.Movie>>, ProblemHttpResult>> GetMovies([FromServices] ISender sender)
+    public static async Task<Results<Ok<List<Entities.Book>>, ProblemHttpResult>> GetMovies([FromServices] ISender sender)
     {
         try
         {
-            return TypedResults.Ok(await sender.Send(new Queries.GetMovies.GetMoviesQuery()));
+            return TypedResults.Ok(await sender.Send(new Queries.GetMovies.GetBooksQuery()));
         }
         catch (Exception ex)
         {
@@ -48,11 +48,11 @@ public static class MovieEndpoints
         }
     }
 
-    public static async Task<Results<Ok<Entities.Movie>, NotFound<string>, ProblemHttpResult>> GetMovieById([Validate][FromRoute] Guid id, [FromServices] ISender sender)
+    public static async Task<Results<Ok<Entities.Book>, NotFound<string>, ProblemHttpResult>> GetMovieById([Validate][FromRoute] Guid id, [FromServices] ISender sender)
     {
         try
         {
-            return TypedResults.Ok(await sender.Send(new Queries.GetMovieById.GetMovieByIdQuery
+            return TypedResults.Ok(await sender.Send(new Queries.GetMovieById.GetBookByIdQuery
             {
                 Id = id
             }));
